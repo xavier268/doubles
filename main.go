@@ -18,9 +18,22 @@ var store map[[sha256.Size]byte]([]string)
 func main() {
 	store = make(map[[sha256.Size]byte]([]string), 16)
 
-	fmt.Println("cli arguments :", verbose, filter, targets)
+	if debug {
+		fmt.Println("cli arguments --------------")
+		fmt.Println("  Verbose    : ", verbose)
+		fmt.Println("  Debug      : ", debug)
+		fmt.Println("  Continuous : ", continuous)
+		fmt.Println("  Filter     : ", filter)
+		fmt.Println("  Targets    : ", targets)
+		fmt.Println("----------------------------")
+	}
 	walk()
-	dump(false)
+	if debug {
+		dump(false)
+	}
+	if !continuous {
+		summary()
+	}
 }
 
 // Walk will walk the dirs and sub dirs selected.
@@ -42,19 +55,37 @@ func wdf(path string, d fs.DirEntry, err error) error {
 		fmt.Println(err)
 		return fs.SkipDir
 	}
-	if verbose {
+	if verbose || debug {
 		fmt.Printf("Checking : \t%s\n", path)
 	}
 
 	if d.IsDir() {
+		// its a dir
+		if regex != nil && regex.Match([]byte(d.Name())) {
+			if verbose || debug {
+				fmt.Println("......... \tskiping !")
+			}
+			return fs.SkipDir
+		}
 		return nil
 	} else {
-		h(path)
+		// its a file
+		if regex != nil && regex.Match([]byte(d.Name())) {
+			// match filter, skip !
+			if verbose || debug {
+				fmt.Println("......... \tskiping !")
+			}
+			return nil
+		} else {
+			// no filter match, handle !
+			h(path)
+		}
 	}
 
 	return nil
 }
 
+// h handles a valid file name
 func h(p string) error {
 
 	var arr [sha256.Size]byte
@@ -68,13 +99,18 @@ func h(p string) error {
 	if _, err := io.Copy(hh, f); err != nil {
 		return err
 	}
-	// trick to copy slice to the array ...
+	// trick to copy slice to the array,
+	// so it can be used as mak key
 	copy(arr[:], hh.Sum(nil))
-	ps, ok := store[arr]
+
+	ps := store[arr]
 	ps = append(ps, p)
 	store[arr] = ps
-	if ok {
-		fmt.Println("Duplicate exists !")
+	if len(ps) > 1 && continuous {
+		for _, pp := range ps {
+			fmt.Println(pp)
+		}
+		fmt.Println()
 	}
 
 	return nil
@@ -82,11 +118,25 @@ func h(p string) error {
 
 // dump the store database of hashes and duplicates
 func dump(onlyDuplicates bool) {
+	fmt.Println("\n=========== store dump ===========")
 	for k, vv := range store {
 		if !onlyDuplicates || len(vv) > 1 {
 			fmt.Printf("%x\n", k)
 			for i, v := range vv {
-				fmt.Printf("%d\t%s\n", i, v)
+				fmt.Printf("%d\t%s\n", i+1, v)
+			}
+		}
+	}
+}
+
+// summary displays summary of duplicates
+func summary() {
+	fmt.Println("\nThe following groups of files have identical contents")
+	for _, vv := range store {
+		if len(vv) > 1 {
+			fmt.Println()
+			for i, v := range vv {
+				fmt.Printf("%d\t%s\n", i+1, v)
 			}
 		}
 	}
