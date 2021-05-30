@@ -10,12 +10,19 @@ import (
 	"path/filepath"
 )
 
+var version string
+
 // store is used to map hash value to the matching full path name(s)
 // duplicates are when the []string slice contains more than 1 element.
 // The []string should bnever be empty nor nil.
 var store map[[sha256.Size]byte]([]string)
 
 func main() {
+
+	fmt.Println("doubles - detecting files with identical content")
+	fmt.Println("(c) Xavier Gandillot")
+	fmt.Println(version)
+
 	store = make(map[[sha256.Size]byte]([]string), 16)
 
 	if debug {
