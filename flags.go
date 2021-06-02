@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
 )
@@ -27,6 +28,13 @@ func init() {
 
 	flag.BoolVar(&debug, "debug", false, "print debug information")
 	flag.BoolVar(&debug, "d", false, "")
+
+	flag.Usage = func() {
+		fmt.Println("Usage : doubles [OPTION FLAGS] PATH1 PATH2 PATH3 ... ")
+		fmt.Println(version)
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
 
 	flag.Parse()
 
