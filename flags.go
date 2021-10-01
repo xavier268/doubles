@@ -17,7 +17,7 @@ var continuous bool
 
 func init() {
 
-	flag.StringVar(&filter, "filter", "", "regex pattern of basename of file or dir names to ignore. Matching dirs will be skiped entirely.")
+	flag.StringVar(&filter, "filter", "", "regex pattern of basename of file or dir names to ignore. The pattern must match the full name, not just part of it. Matching dirs will be skiped entirely and recursively")
 	flag.StringVar(&filter, "f", "", "")
 
 	flag.BoolVar(&verbose, "verbose", false, "print verbose information")
@@ -31,6 +31,7 @@ func init() {
 
 	flag.Usage = func() {
 		fmt.Println("Usage : doubles [OPTION FLAGS] PATH1 PATH2 PATH3 ... ")
+		fmt.Println("By default, if PATH is not set, the working directory (.) is used")
 		fmt.Println(version)
 		flag.PrintDefaults()
 		os.Exit(0)
