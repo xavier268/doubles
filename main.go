@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 )
 
+// version will be set at build time by the build.sh script provided
 var version string
 
 // store is used to map hash value to the matching full path name(s)
@@ -20,7 +21,7 @@ var store map[[sha256.Size]byte]([]string)
 func main() {
 
 	fmt.Println("doubles - detecting files with identical content")
-	fmt.Println("(c) Xavier Gandillot")
+	fmt.Println("(c) Xavier Gandillot - 2020,2021")
 	fmt.Println(version)
 
 	store = make(map[[sha256.Size]byte]([]string), 16)

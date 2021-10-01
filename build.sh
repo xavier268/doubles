@@ -1,10 +1,11 @@
 #!/bin/bash
 
+VERSION="v0.13"
 git commit -a -m "updating binaries"
 
 GIT_HASH=$(git log --format=%H -1 HEAD)
 GIT_DATE=$(git log --format=%cD -1 HEAD)
-VERSION="Build $GIT_HASH ($GIT_DATE)"
+VERSION="$VERSION - Build $GIT_HASH ($GIT_DATE)"
 
 echo "Last commit full hash : $GIT_HASH"
 echo "Last commit date : $GIT_DATE"
