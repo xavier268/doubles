@@ -15,12 +15,12 @@ var version string
 
 // store is used to map hash value to the matching full path name(s)
 // duplicates are when the []string slice contains more than 1 element.
-// The []string should bnever be empty nor nil.
+// The []string should never be empty nor nil.
 var store map[[sha256.Size]byte]([]string)
 
 func main() {
 
-	fmt.Println("doubles - detecting files with identical content")
+	fmt.Println("doubles - detecting files with identical content (v1.1)")
 	fmt.Println("(c) Xavier Gandillot - 2020,2021")
 	fmt.Println(version)
 
@@ -108,7 +108,7 @@ func h(p string) error {
 		return err
 	}
 	// trick to copy slice to the array,
-	// so it can be used as mak key
+	// so it can be used as map key
 	copy(arr[:], hh.Sum(nil))
 
 	ps := store[arr]
@@ -142,10 +142,23 @@ func summary() {
 	fmt.Println("\nThe following groups of files have identical contents")
 	for _, vv := range store {
 		if len(vv) > 1 {
-			fmt.Println()
+			if size {
+				fmt.Printf("\nFile size : %d\n", getSize(vv[0]))
+			} else {
+				fmt.Println()
+			}
 			for i, v := range vv {
 				fmt.Printf("%d\t%s\n", i+1, v)
 			}
 		}
 	}
+}
+
+// getSize for a named file.
+func getSize(f string) int64 {
+	fi, err := os.Stat(f)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return fi.Size()
 }

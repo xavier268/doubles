@@ -12,7 +12,7 @@ var verbose bool
 var filter string
 var regex *regexp.Regexp // nil if no filter defined
 var targets []string
-var debug bool
+var debug, size bool
 var continuous bool
 
 func init() {
@@ -28,6 +28,9 @@ func init() {
 
 	flag.BoolVar(&debug, "debug", false, "print debug information")
 	flag.BoolVar(&debug, "d", false, "")
+
+	flag.BoolVar(&size, "size", false, "print size information")
+	flag.BoolVar(&size, "s", false, "")
 
 	flag.Usage = func() {
 		fmt.Println("Usage : doubles [OPTION FLAGS] PATH1 PATH2 PATH3 ... ")
