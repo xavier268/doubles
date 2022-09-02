@@ -115,10 +115,14 @@ func h(p string) error {
 	ps = append(ps, p)
 	store[arr] = ps
 	if len(ps) > 1 && continuous {
+		if size {
+			fmt.Printf("\nFile size : %d bytes\n", getSize(ps[0]))
+		} else {
+			fmt.Println()
+		}
 		for _, pp := range ps {
 			fmt.Println(pp)
 		}
-		fmt.Println()
 	}
 
 	return nil
@@ -143,7 +147,7 @@ func summary() {
 	for _, vv := range store {
 		if len(vv) > 1 {
 			if size {
-				fmt.Printf("\nFile size : %d\n", getSize(vv[0]))
+				fmt.Printf("\nFile size : %d bytes\n", getSize(vv[0]))
 			} else {
 				fmt.Println()
 			}
