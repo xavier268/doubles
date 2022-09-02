@@ -20,7 +20,7 @@ var store map[[sha256.Size]byte]([]string)
 
 func main() {
 
-	fmt.Println("doubles - detecting files with identical content (v1.1)")
+	fmt.Println("doubles - detecting files with identical content")
 	fmt.Println("(c) Xavier Gandillot - 2020,2021")
 	fmt.Println(version)
 

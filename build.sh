@@ -1,6 +1,7 @@
 #!/bin/bash
 
-VERSION="v0.13"
+VERSION="v1.1
+"
 git commit -a -m "updating binaries"
 
 GIT_HASH=$(git log --format=%H -1 HEAD)
