@@ -16,4 +16,5 @@ echo "buiding linux binary"
 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'main.version=$VERSION'"  .
 
 echo "Buiding windows binary"
+
 GOOS=windows GOARCH=amd64 go build -ldflags "-X 'main.version=$VERSION'"  .
