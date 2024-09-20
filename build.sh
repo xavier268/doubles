@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v1.1"
+VERSION="v1.1.1"
 git commit -a -m "updating binaries"
 
 GIT_HASH=$(git log --format=%H -1 HEAD)
@@ -13,7 +13,7 @@ echo $VERSION
 
 
 echo "buiding linux binary"
-go build -ldflags "-X 'main.version=$VERSION'"  .
+GOOS=linux GOARCH=amd64 go build -ldflags "-X 'main.version=$VERSION'"  .
 
 echo "Buiding windows binary"
 GOOS=windows GOARCH=amd64 go build -ldflags "-X 'main.version=$VERSION'"  .
